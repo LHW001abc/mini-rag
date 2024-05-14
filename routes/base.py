@@ -1,11 +1,15 @@
-from fastapi import FastAPI , APIRouter
+from fastapi import FastAPI ,Depends ,  APIRouter
 
-import os
+from helpers.config import get_settings ,Settings
+
 base_router = APIRouter(
     prefix="/api/v1"
 )
 @base_router.get("/")
 
-async def welcome():
-    name = os.getenv("APP_NAME")
-    return {"message": "Welcome to the FastAPI" + name + " "}
+async def welcome(app_settings: Settings =Depends(get_settings)):
+  #  app_settings = get_settings()
+    name = app_settings.APP_NAME
+    version = app_settings.APP_VERSION
+    return {"message": "Welcome to the FastAPI" + name + " " + version + " "}
+ 
